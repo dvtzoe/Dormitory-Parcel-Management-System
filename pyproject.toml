@@ -2,12 +2,22 @@
 name = "dormitory-parcel-management-system"
 version = "0.1.0"
 requires-python = ">=3.12"
-dependencies = [
-    "pydantic>=2.14.4",
-]
+dependencies = []
 
 [dependency-groups]
 dev = [
+    "basedpyright>=1.40.2",
     "pytest>=9.2.0",
     "ruff>=0.17.6",
 ]
+
+[tool.uv.workspace]
+members = [
+    "apps/*",
+    "packages/*",
+]
+
+[tool.basedpyright]
+venvPath = "."
+venv = ".venv"
+

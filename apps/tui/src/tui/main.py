@@ -10,8 +10,8 @@ Stage 3: registration, searching and JSON saving/loading are working.
 from datetime import datetime
 from pathlib import Path
 
-from parcel import DATE_FORMAT
-from parcel_manager import ParcelManager
+from parcel.parcel import DATE_FORMAT
+from parcel.parcel_manager import ParcelManager
 
 DATA_FILE = Path(__file__).parent / "parcels.json"
 

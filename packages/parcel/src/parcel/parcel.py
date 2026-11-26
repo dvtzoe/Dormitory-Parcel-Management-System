@@ -13,10 +13,10 @@ from pydantic import BaseModel, TypeAdapter
 
 # The format used to show dates and times, for example "2026-11-26 14:30".
 # %Y = year, %m = month, %d = day, %H = hour (24h), %M = minute.
-DATE_FORMAT = "%Y-%m-%d %H:%M"
+DATE_FORMAT: str = "%Y-%m-%d %H:%M"
 
 # The status every new parcel starts with.
-STATUS_WAITING = "Waiting for pickup"
+STATUS_WAITING: str = "Waiting for pickup"
 
 
 class Parcel(BaseModel):
@@ -42,4 +42,4 @@ class Parcel(BaseModel):
         """)
 
 
-ParcelListAdapter = TypeAdapter(list[Parcel])
+ParcelListAdapter: TypeAdapter[list[Parcel]] = TypeAdapter(list[Parcel])
