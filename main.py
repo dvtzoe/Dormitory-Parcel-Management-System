@@ -81,7 +81,7 @@ def register_parcel_menu(manager: ParcelManager) -> None:
         return
 
     print("\nParcel registered and saved successfully!")
-    parcel.display()
+    print(parcel)
     print(f"Total parcels registered: {manager.count_parcels()}")
 
 
@@ -97,8 +97,7 @@ def search_by_name_menu(manager: ParcelManager) -> None:
         return
 
     print(f"\nFound {len(results)} parcel(s):")
-    for parcel in results:
-        parcel.display()
+    print(*results)
 
 
 def search_by_tracking_menu(manager: ParcelManager) -> None:
@@ -113,7 +112,7 @@ def search_by_tracking_menu(manager: ParcelManager) -> None:
         return
 
     print("\nParcel found:")
-    parcel.display()
+    print(parcel)
 
 
 def show_menu() -> None:

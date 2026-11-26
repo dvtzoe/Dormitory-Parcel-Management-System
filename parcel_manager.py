@@ -9,9 +9,8 @@ them from a JSON file.
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import cast
 
-from parcel import Parcel, ParcelDict, parcel_from_dict
+from parcel import Parcel, ParcelListAdapter
 
 
 class ParcelManager:
@@ -42,12 +41,7 @@ class ParcelManager:
         """
 
         try:
-            with open(self.file_path, "r", encoding="utf-8") as file:
-                data = cast(list[ParcelDict], json.load(file))
-
-            loaded_parcels: list[Parcel] = []
-            for parcel_data in data:
-                loaded_parcels.append(parcel_from_dict(parcel_data))
+            self.parcels = ParcelListAdapter.validate_json(self.file_path.read_bytes())
 
         except FileNotFoundError:
             return "No saved records found. Starting with an empty list."
@@ -61,7 +55,6 @@ class ParcelManager:
                 "lost. Starting with an empty list."
             )
 
-        self.parcels = loaded_parcels
         return f"Loaded {len(self.parcels)} parcel(s) from file."
 
     def save_to_file(self) -> None:
@@ -75,12 +68,9 @@ class ParcelManager:
             OSError: If the file cannot be written.
         """
 
-        data: list[ParcelDict] = []
-        for parcel in self.parcels:
-            data.append(parcel.to_dict())
-
-        with open(self.file_path, "w", encoding="utf-8") as file:
-            json.dump(data, file, indent=4)
+        _ = self.file_path.write_bytes(
+            ParcelListAdapter.dump_json(self.parcels, indent=2)
+        )
 
     def find_by_tracking_number(self, tracking_number: str) -> Parcel | None:
         """
@@ -149,7 +139,12 @@ class ParcelManager:
                 f"Tracking number {tracking_number} is already registered."
             )
 
-        new_parcel = Parcel(student_name, room_number, tracking_number, arrival_time)
+        new_parcel = Parcel(
+            student_name=student_name,
+            room_number=room_number,
+            tracking_number=tracking_number,
+            arrival_time=arrival_time,
+        )
         self.parcels.append(new_parcel)
 
         self.save_to_file()
