@@ -9,9 +9,13 @@ Stage 3: registration, searching and JSON saving/loading are working.
 
 from datetime import datetime
 from pathlib import Path
+from typing import override
 
 from parcel.parcel import DATE_FORMAT
 from parcel.parcel_manager import ParcelManager
+from textual.app import App, ComposeResult
+from textual.driver import Driver
+from textual.types import CSSPathType
 
 DATA_FILE = Path(__file__).parent / "parcels.json"
 
@@ -125,35 +129,52 @@ def show_menu() -> None:
     print("4. Save and Exit")
 
 
+class TuiApp(App[None]):
+    def __init__(
+        self,
+        driver_class: type[Driver] | None = None,
+        css_path: CSSPathType | None = None,
+        watch_css: bool = False,
+        ansi_color: bool | None = None,
+    ):
+        super().__init__(driver_class, css_path, watch_css, ansi_color)
+
+    @override
+    def compose(self) -> ComposeResult:
+        return super().compose()
+
+
 def main() -> None:
     """Run the main menu loop until the user chooses to exit."""
 
-    manager = ParcelManager(DATA_FILE)
-    print(manager.load_from_file())
+    TuiApp().run()
 
-    while True:
-        show_menu()
-        choice = input("Choose an option (1-4): ").strip()
-
-        if choice == "1":
-            register_parcel_menu(manager)
-        elif choice == "2":
-            search_by_name_menu(manager)
-        elif choice == "3":
-            search_by_tracking_menu(manager)
-        elif choice == "4":
-            try:
-                manager.save_to_file()
-            except OSError as error:
-                # Stay in the menu so the records in memory are not lost.
-                print(f"Error: could not save records: {error}")
-                continue
-            print(
-                f"Saved {manager.count_parcels()} parcel(s) to parcels.json. Goodbye!"
-            )
-            break
-        else:
-            print("Invalid choice. Please enter a number from 1 to 4.")
+    # manager = ParcelManager(DATA_FILE)
+    # print(manager.load_from_file())
+    #
+    # while True:
+    #     show_menu()
+    #     choice = input("Choose an option (1-4): ").strip()
+    #
+    #     if choice == "1":
+    #         register_parcel_menu(manager)
+    #     elif choice == "2":
+    #         search_by_name_menu(manager)
+    #     elif choice == "3":
+    #         search_by_tracking_menu(manager)
+    #     elif choice == "4":
+    #         try:
+    #             manager.save_to_file()
+    #         except OSError as error:
+    #             # Stay in the menu so the records in memory are not lost.
+    #             print(f"Error: could not save records: {error}")
+    #             continue
+    #         print(
+    #             f"Saved {manager.count_parcels()} parcel(s) to parcels.json. Goodbye!"
+    #         )
+    #         break
+    #     else:
+    #         print("Invalid choice. Please enter a number from 1 to 4.")
 
 
 if __name__ == "__main__":
