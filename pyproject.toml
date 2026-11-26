@@ -21,3 +21,5 @@ members = [
 venvPath = "."
 venv = ".venv"
 
+[tool.ruff]
+extend-exclude = ["typings"]
